@@ -298,6 +298,11 @@ namespace TextureReplacer
                 if (texture == null || !texInfo.isReadable)
                     continue;
 
+				// Following line makes sure that buttons aren't unloaded from memory
+                // Needed to allow other mods to manipulate the toolbar buttons (ie: Janitor's Closet
+                if (texture.width <= 38 && texture.height <= 38)
+                    continue;
+
                 // Unload texture from RAM (a.k.a. "make it unreadable") unless set otherwise.
                 if (isUnloadingEnabled.Value && !keepLoaded.Any(r => r.IsMatch(texture.name)))
                 {
