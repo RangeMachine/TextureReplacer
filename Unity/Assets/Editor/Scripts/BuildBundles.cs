@@ -24,6 +24,10 @@ public class BuildShaders
     [MenuItem("TextureReplacer/Build Shaders")]
     private static void BuildForAllPlatforms()
     {
+        // Check directory
+        if (!Directory.Exists("Bundles"))
+            Directory.CreateDirectory("Bundles");
+
         // Cleanup
         File.Delete("Bundles/DirectX.bundle");
         File.Delete("Bundles/OpenGL.bundle");

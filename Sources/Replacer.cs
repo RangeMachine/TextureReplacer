@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2013-2016 Davorin Učakar, RangeMachine
+ * Copyright © 2013-2018 Davorin Učakar, RangeMachine
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -58,6 +58,9 @@ namespace TextureReplacer
         {
             foreach (Material material in Resources.FindObjectsOfTypeAll<Material>())
             {
+                if (!material.HasProperty("_MainTex"))
+                    continue;
+
                 Texture texture = material.mainTexture;
 
                 if (texture == null || texture.name.Length == 0 || texture.name.StartsWith("Temp", StringComparison.Ordinal))
@@ -80,6 +83,9 @@ namespace TextureReplacer
                         UnityEngine.Object.Destroy(texture);
                     }
                 }
+
+                if (!material.HasProperty(Util.BUMPMAP_PROPERTY))
+                    continue;
 
                 Texture normalMap = material.GetTexture(Util.BUMPMAP_PROPERTY);
                 if (normalMap == null)

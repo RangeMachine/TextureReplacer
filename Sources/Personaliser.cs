@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2013-2016 Davorin Učakar, RangeMachine
+ * Copyright © 2013-2018 Davorin Učakar, RangeMachine
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -529,7 +529,7 @@ namespace TextureReplacer
                                 kerbalIVA.textureVeteran = newTexture;
                             }
                             break;
-                        
+
                         case "helmet":
                         case "mesh_female_kerbalAstronaut01_helmet":
                             if (isEva)
@@ -562,7 +562,8 @@ namespace TextureReplacer
                             }
                             break;
 
-                        default: // Jetpack.
+                        default:
+                            // Jetpack.
                             if (isEva)
                             {
                                 smr.enabled = needsSuit;
@@ -583,11 +584,31 @@ namespace TextureReplacer
                         material.SetTexture(Util.BUMPMAP_PROPERTY, newNormalMap);
                 }
             }
+
+            if (isEva)
+            {
+                foreach (Transform trans in component.GetComponentsInChildren<Transform>())
+                {
+                    if (trans.name == "EVAparachute")
+                    {
+                        foreach (Renderer renderer in trans.GetComponentsInChildren<Renderer>(true))
+                        {
+                            if (!needsSuit)
+                            {
+                                renderer.transform.localPosition += Vector3.forward * 0.1f;
+                                renderer.transform.localPosition += Vector3.up * -0.03f;
+                            }
+                            else
+                                renderer.transform.localPosition = Vector3.zero;
+                        }
+                    }
+                }
+            }
         }
 
         /**
-         * Personalise Kerbals in an internal space of a vessel. Used by IvaModule.
-         */
+            * Personalise Kerbals in an internal space of a vessel. Used by IvaModule.
+            */
 
         public void personaliseIva(Kerbal kerbal)
         {

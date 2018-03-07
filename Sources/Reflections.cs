@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright © 2013-2016 Davorin Učakar, RangeMachine
+ * Copyright © 2013-2018 Davorin Učakar, RangeMachine
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -309,7 +309,7 @@ namespace TextureReplacer
                 material.shader = enableStatic ? visorShader : transparentSpecularShader;
 
                 ///////////////////////////////////////////////////////////////////////////////////////////
-                // In 1.2 visor texture some reason want load by default way
+                // In 1.2 visor texture some reason dont want load by default way
                 ///////////////////////////////////////////////////////////////////////////////////////////
                 Texture visorTex = GameDatabase.Instance.GetTexture(Util.DIR + "Default/EVAVisor", false);
 
