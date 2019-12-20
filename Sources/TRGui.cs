@@ -32,8 +32,9 @@ namespace TextureReplacer
     {
         private static readonly string APP_ICON_PATH = Util.DIR + "Plugins/AppIcon";
         private static readonly string[] REFLECTION_TYPES = { "None", "Static", "Real" };
-        private static readonly Color SELECTED_COLOUR = new Color(0.7f, 0.9f, 1.0f);
-        private static readonly Color CLASS_COLOUR = new Color(1.0f, 0.8f, 1.0f);
+        private static Color SELECTED_COLOUR; // = new Color(0.7f, 0.9f, 1.0f);
+        private static Color CLASS_COLOUR; // = new Color(1.0f, 0.8f, 1.0f);
+
         private const int WINDOW_ID = 107056;
         // Classes from config files.
         private readonly List<string> classes = new List<string>();
@@ -365,6 +366,9 @@ namespace TextureReplacer
 
         public void Awake()
         {
+        SELECTED_COLOUR = new Color(0.7f, 0.9f, 1.0f);
+        CLASS_COLOUR = new Color(1.0f, 0.8f, 1.0f);
+
             if (isGuiEnabled)
             {
                 foreach (ConfigNode node in GameDatabase.Instance.GetConfigNodes("TextureReplacer"))
