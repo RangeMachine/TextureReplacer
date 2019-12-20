@@ -289,7 +289,7 @@ Known Issues
 Licence
 -------
 
-Copyright © 2013-2016 Davorin Učakar, Ryan Bray, RangeMachine
+Copyright © 2013-2018 Davorin Učakar, Ryan Bray, RangeMachine
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
