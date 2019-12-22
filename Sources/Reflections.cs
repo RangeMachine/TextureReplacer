@@ -68,7 +68,7 @@ namespace TextureReplacer
                     SkinnedMeshRenderer visor = transform.GetComponentsInChildren<SkinnedMeshRenderer>(true)
                       .FirstOrDefault(m => m.name == "visor");
 
-                    if (visor != null)
+                    if (visor != null && instance.visorShader != null)
                     {
                         Material material = visor.material;
 
@@ -189,9 +189,9 @@ namespace TextureReplacer
       { "KSP/Diffuse", "Reflective/Bumped Diffuse" },
       { "KSP/Specular", "Reflective/Bumped Diffuse" },
       { "KSP/Bumped", "Reflective/Bumped Diffuse" },
-      { "KSP/Bumped Specular", "Reflective/Bumped Diffuse" },
-      { "KSP/Alpha/Translucent", "KSP/TR/Visor" },
-      { "KSP/Alpha/Translucent Specular", "KSP/TR/Visor" }
+      { "KSP/Bumped Specular", "Reflective/Bumped Diffuse" } //,
+      //{ "KSP/Alpha/Translucent", "KSP/TR/Visor" },
+      //{ "KSP/Alpha/Translucent Specular", "KSP/TR/Visor" }
     };
 
         // Render layers:
@@ -291,37 +291,44 @@ namespace TextureReplacer
             reflectionType = type;
 
             Part[] evas = {
-        PartLoader.getPartInfoByName("kerbalEVA").partPrefab,
-        PartLoader.getPartInfoByName("kerbalEVAfemale").partPrefab
-      };
+                PartLoader.getPartInfoByName("kerbalEVA").partPrefab,
+                PartLoader.getPartInfoByName("kerbalEVAfemale").partPrefab
+              };
 
             for (int i = 0; i < 2; ++i)
             {
                 // Set visor texture and reflection on proto-EVA Kerbal.
                 SkinnedMeshRenderer visor = evas[i].GetComponentsInChildren<SkinnedMeshRenderer>(true)
-                  .First(m => m.name == "visor");
+                  .First(m => m.name.Contains( "visor"));
+                // .First(m => m.name == "visor");
 
-                Material material = visor.sharedMaterial;
-                bool enableStatic = isVisorReflectionEnabled && reflectionType == Type.STATIC;
-
-                // We apply visor shader for real reflections later, through TREvaModule since we don't
-                // want corrupted reflections in the main menu.
-                material.shader = enableStatic ? visorShader : transparentSpecularShader;
-
-                ///////////////////////////////////////////////////////////////////////////////////////////
-                // In 1.2 visor texture some reason dont want load by default way
-                ///////////////////////////////////////////////////////////////////////////////////////////
-                Texture visorTex = GameDatabase.Instance.GetTexture(Util.DIR + "Default/EVAVisor", false);
-
-                if (visorTex != null)
+                if (visor == null)
+                    Debug.Log("setReflectionType, visor is null");
+                else
                 {
-                    material.SetTexture("_MainTex", visorTex);
-                    material.color = Color.white;
-                }
-                ///////////////////////////////////////////////////////////////////////////////////////////
 
-                material.SetTexture(Util.CUBE_PROPERTY, enableStatic ? staticEnvMap : null);
-                material.SetColor(Util.REFLECT_COLOR_PROPERTY, visorReflectionColour);
+                    Material material = visor.sharedMaterial;
+                    bool enableStatic = isVisorReflectionEnabled && reflectionType == Type.STATIC;
+
+                    // We apply visor shader for real reflections later, through TREvaModule since we don't
+                    // want corrupted reflections in the main menu.
+                    material.shader = enableStatic ? visorShader : transparentSpecularShader;
+
+                    ///////////////////////////////////////////////////////////////////////////////////////////
+                    // In 1.2 visor texture some reason dont want load by default way
+                    ///////////////////////////////////////////////////////////////////////////////////////////
+                    Texture visorTex = GameDatabase.Instance.GetTexture(Util.DIR + "Default/EVAVisor", false);
+
+                    if (visorTex != null)
+                    {
+                        material.SetTexture("_MainTex", visorTex);
+                        material.color = Color.white;
+                    }
+                    ///////////////////////////////////////////////////////////////////////////////////////////
+
+                    material.SetTexture(Util.CUBE_PROPERTY, enableStatic ? staticEnvMap : null);
+                    material.SetColor(Util.REFLECT_COLOR_PROPERTY, visorReflectionColour);
+                }
             }
         }
 
@@ -432,7 +439,8 @@ namespace TextureReplacer
             }
 
             LoadBundle();
-            visorShader = LoadShader("KSP/TR/Visor");
+            if (LoadedShaders.ContainsKey("KSP/TR/Visor"))
+                visorShader = LoadShader("KSP/TR/Visor");
 
             for (int i = 0; i < SHADER_MAP.GetLength(0); ++i)
             {
